@@ -1,0 +1,152 @@
+# git初始化
+git init
+
+# git创建目录
+$ mkdir 目录名
+
+#进入git创建的GIT目录
+$ cd 目录名
+
+#显示当前目录
+$ pwd
+
+#显示隐藏目录
+$ ls -ah
+
+$ git add							提交文件到服务端(可以提交一个乃至多个)
+$ git commit -m "简介内容"		提交修改日志("" 中是修改内容的简介)
+
+
+$ git status						查看文件当前状态
+
+$ git diff							查看difference
+$ git log 							查看提交的历史记录(--pretty=oneline 精简查看，只显示commit id(版本号)与注释)
+
+$ git reset 							
+
+首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交3628164...882e1e0（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+
+
+# git reset --hard HEAD^
+
+$ cat readme.txt						在git环境中查看内容文件
+
+
+# commit 19793305811a049e1281c9b272317e2eccb45e1e    //append GPL
+
+最新的那个版本append GPL已经看不到了！好比你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？
+
+办法其实还是有的，只要上面的命令行窗口还没有被关掉，你就可以顺着往上找啊找啊，找到那个append GPL的commit id是3628164...，于是就可以指定回到未来的某个版本：
+
+git reset --hard 19793305811
+
+版本号没必要写全，前几位就可以了，Git会自动去找。当然也不能只写前一两位，因为Git可能会找到多个版本号，就无法确定是哪一个了。
+
+git reflog 									用来记录你的每一次命令
+
+
+
+git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别
+
+
+
+git checkout -- readme.txt 	放弃上次更改
+
+
+
+用命令git reset HEAD file可以把暂存区的修改撤销掉（unstage），重新放回工作区
+
+
+git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。
+
+#
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD file，就回到了场景1，第二步按场景1操作。
+
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+
+#
+
+git rm 								删除文件
+git commit -m "remove test.txt"		提交修改内容日志
+
+
+git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。
+
+
+
+目前，在GitHub上的这个error0702仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。
+
+现在，我们根据GitHub的提示，在本地的error0702仓库下运行命令：
+
+git remote add origin git@github.com:error0702/error0702.git
+
+添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。
+
+下一步，就可以把本地库的所有内容推送到远程库上：
+
+$ git push -u origin master
+
+把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。
+
+由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。
+
+推送成功后，可以立刻在GitHub页面中看到远程库的内容已经和本地一模一样：
+
+
+从现在起，只要本地作了提交，就可以通过命令：
+
+$ git push origin master
+
+把本地master分支的最新修改推送至GitHub，现在，你就拥有了真正的分布式版本库！
+
+
+
+-------------------------------------------------------------------------
+分支
+
+git checkout -b dev 			创建DEV分支
+
+加-b参数等同于 
+git branch dev
+git checkout dev
+
+查看当前分支
+git branch 
+
+
+切换分支:
+git checkout master
+
+
+合并分支:
+git merge dev(分支名称)
+
+删除分支:
+git branch -d dev
+
+
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch <name>
+
+切换分支：git checkout <name>
+
+创建+切换分支：git checkout -b <name>
+
+合并某分支到当前分支：git merge <name>
+
+删除分支：git branch -d <name>
+
+
+-------------------------------------------------------------------------
+用带参数的git log也可以看到分支的合并情况：
+
+git log --graph --pretty=oneline --abbrev-commit
+
+用git log --graph命令可以看到分支合并图。
+
